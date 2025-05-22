@@ -1,0 +1,78 @@
+.nav-main-container {
+    max-width: 14%;
+    background-color: #ffffff;
+    height: 98%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px 5px;
+    margin: 8px;
+    transition: 3s ease-in-out;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    border-radius: 5px;
+}
+.navmenu-tablist-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 0px;
+    margin-top: 20px;
+}
+.navmenu-list-item {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 10px;
+    margin: 3px 0px;
+    border-radius: 5px;
+    color: #898787;
+    list-style: none;
+    text-decoration: none;
+}
+
+.nav-icon {
+    margin-right: 10px;
+    margin-bottom: 0px;
+    align-self: center;
+}
+.nav-name {
+    width: 100%;
+    font-weight: 400;
+    margin-bottom: 0px;
+}
+.navmenu-list-item:hover {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #4a4a4a78;
+    border-radius: 50px;
+    height: 40px;
+    width: 100%;
+    margin: 3px 0px;
+    padding: 15px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav-header-icons-card {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.navmenu-list-item.active {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #4a4a4a78;
+    border-radius: 50px;
+    height: 40px;
+    width: 100%;
+    padding: 15px 10px;
+    margin: 3px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,99 @@
+.mating-container {
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fff;
+}
+
+.mating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mating-header h2 {
+  margin: 0;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.global-search {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.export-btn,
+.add-btn {
+  padding: 2px 4px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #3f51b5;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+
+
+.mating-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.table-row-mating-records {
+    padding: 2px 5px !important;
+    height: 20px;
+    line-height: 0px;
+}
+.mating-table th,
+.mating-table td {
+  padding: 5px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 12px;
+}
+
+.mating-table th {
+  background-color: #e1e1e1;
+  color: #3e3e3e;
+}
+
+
+.mating-table input[type="text"] {
+  width: 100%;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.mating-table td a {
+  color: #6177f6;
+  text-decoration: none;
+}
+
+.edit-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+.records-per-page-select {
+    height: 15px;
+    font-size: 12px;
+    border: 1px solid #b9b9b9;
+    border-radius: 5px;
+    margin-left: 5px;
+}

@@ -12,6 +12,23 @@
     justify-content: center;
     align-items: center;
 }
+.labels-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2px 0px;
+}
+.label-card {
+    width: 49%;
+    background-color: #007fee;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 1px 3px;
+    text-align: center;
+}
 .forms-sections-card {
     width: 100%;
     display: flex;

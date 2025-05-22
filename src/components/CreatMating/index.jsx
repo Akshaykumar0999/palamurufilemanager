@@ -17,33 +17,16 @@ const CreateMating = () => {
             <div className="forms-sections-card">
               <section className="form-section-one-card">
                 <div className="section-one-firt-card">
-                  <div className="section-one-input-card">
-                    <div className="input-containers">
+                    <div className="input-complete-containers">
                       <label className="input-label">Species</label>
                       <select className="input-select-card">
                         <option>Dog</option>
                         <option>Cat</option>
                       </select>
                     </div>
-                    <div className="input-radio-containers">
-                      <div className="radio-cards">
-                        <input
-                          type="radio"
-                          name="gender"
-                          id="male"
-                          style={{ marginRight: "5px" }}
-                        />
-                        <lable htmlFor="male">Male</lable>
-                      </div>
-                      <div className="radio-cards">
-                        <input
-                          type="radio"
-                          name="gender"
-                          style={{ marginRight: "5px" }}
-                        />
-                        <lable>Female</lable>
-                      </div>
-                    </div>
+                  <div className="labels-container">
+                    <label className="label-card">Male</label>
+                    <label className="label-card">Female</label>
                   </div>
                   <label
                     className="input-label"
@@ -312,7 +295,10 @@ const CreateMating = () => {
 
                   <div className="input-complete-containers">
                     <label className="input-label">Problems</label>
-                    <textarea style={{ width: "100%", padding: "5px" }} placeholder="Write Points here..." />
+                    <textarea
+                      style={{ width: "100%", padding: "5px" }}
+                      placeholder="Write Points here..."
+                    />
                   </div>
                 </div>
               </section>
@@ -397,7 +383,10 @@ const CreateMating = () => {
                         </select>
                       </td>
                       <td className="animal-report-table-radios">
-                        <div className="radio-cards" style={{margin: '1px 5px'}}>
+                        <div
+                          className="radio-cards"
+                          style={{ margin: "1px 5px" }}
+                        >
                           <input
                             type="radio"
                             name="group"

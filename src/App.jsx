@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import CreateAnimal from "./components/CreateAnimals";
 import CreateMating from "./components/CreatMating";
 import MatingRecords from "./components/MatingRecords";
+import AnimalRecords from "./components/AnimalRecords";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/create-animal" element={<CreateAnimal />} />
         <Route path='/create-mating' element={<CreateMating />} />
         <Route path='/mating-records' element={<MatingRecords />} />
+        <Route path="/animal-records" element={<AnimalRecords />} />
        </Routes>
     </div>
   );

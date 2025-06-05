@@ -6,7 +6,7 @@ import NavSection from "../NavSection";
 import { FaChevronLeft, FaChevronRight, FaRegEdit } from "react-icons/fa";
 import { NavMenuContext } from "../../Context/navmenucontext";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchmattings } from "../../features/matingSlice";
+import { fetchAnimals } from "../../features/animalSlice";
 const mockData = [
   {
     id: "1001865",
@@ -208,7 +208,7 @@ const mockData = [
   },
 ];
 
-const MatingRecords = () => {
+const AnimalRecords = () => {
   const contextData = useContext(NavMenuContext);
   const [search, setSearch] = useState({
     matingID: "",
@@ -224,10 +224,11 @@ const MatingRecords = () => {
 
   const dispatch = useDispatch();
 
-  const mattings = useSelector((state) => state.mattings.mattings);
+  const AnimalRecords = useSelector((state) => state.animals.animals);
+  console.log("AnimalRecords", AnimalRecords);
 
   useEffect(() => {
-    dispatch(fetchmattings());
+    dispatch(fetchAnimals());
   }, [dispatch]);
 
   const [recordsPerPage, setRecordsPerPage] = useState(5);
@@ -243,7 +244,7 @@ const MatingRecords = () => {
   //     item[key]?.toString().toLowerCase().includes(search[key].toLowerCase())
   //   )
   // );
-  const filteredData = mattings.filter((item) =>
+  const filteredData = AnimalRecords.filter((item) =>
     Object.keys(search).every((key) => {
       const searchValue = search[key]?.toString().toLowerCase(); // always safe string
       const itemValue = item[key];
@@ -281,7 +282,7 @@ const MatingRecords = () => {
         <main className="main-details-container-card">
           {/* <div className="mating-container"> */}
           <div className="mating-header">
-            <h2 className="main-heading">Mating Records</h2>
+            <h2 className="main-heading">Animals Records</h2>
             <div className="top-actions">
               <button className="export-btn">Export to CSV</button>
               <input
@@ -306,6 +307,7 @@ const MatingRecords = () => {
                   "BD",
                   "LD",
                   "W",
+                  "Mating ID",
                   "Actions",
                 ].map((header, idx) => (
                   <th key={idx}>{header}</th>
@@ -322,6 +324,7 @@ const MatingRecords = () => {
                   "BD",
                   "LD",
                   "W",
+                  "Mating ID",
                 ].map((key, idx) => (
                   <th key={idx}>
                     <input
@@ -343,28 +346,31 @@ const MatingRecords = () => {
                       to="/create-mating"
                       onClick={() => {
                         contextData.setOpenEdit(true),
-                          contextData.setActiveMateID(item.matingID);
+                          contextData.setActiveMateID(item.animalID);
                       }}
                     >
-                      {item.matingID}
+                      {item.animalID}
                     </Link>
                   </td>
-                  <td className="table-row-mating-records">{item.species === 10 ? "Dog" : "Cat" }</td>
+                  <td className="table-row-mating-records">{item.species}</td>
                   <td className="table-row-mating-records">
-                    <a href="#">{item.maleChipID}</a>
+                    <a href="#">{item.fatherclip}</a>
                   </td>
                   <td className="table-row-mating-records">
-                    <a href="#">{item.femaleChipID}</a>
+                    <a href="#">{item.motherclip}</a>
                   </td>
                   <td className="table-row-mating-records">
-                    {formatDate(item.entryDate)}
+                    {formatDate(item.isCreated)}
                   </td>
                   <td className="table-row-mating-records">
-                    {formatDate(item.exitDate)}
+                    {formatDate(item.isUpdated)}
                   </td>
                   <td className="table-row-mating-records">{item.BD}</td>
                   <td className="table-row-mating-records">{item.LD}</td>
                   <td className="table-row-mating-records">{item.W}</td>
+                  <td className="table-row-mating-records">
+                    <a href="#">{item.matingID}</a>
+                  </td>
                   <td className="table-row-mating-records">
                     <button
                       className="edit-btn"
@@ -421,4 +427,4 @@ const MatingRecords = () => {
   );
 };
 
-export default MatingRecords;
+export default AnimalRecords;

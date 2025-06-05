@@ -7,6 +7,8 @@ import { NavMenuContext } from "../../Context/navmenucontext";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import { SiMaterialformkdocs } from "react-icons/si";
 import { CiViewList } from "react-icons/ci";
+import { FaClipboardList } from "react-icons/fa";
+
 const navTabsList = [
   {
     id: 1,
@@ -31,6 +33,13 @@ const navTabsList = [
     navName: "Mating-Records",
     to: "/mating-records",
     navIcon: <CiViewList size={20} />,
+  },
+
+  {
+    id: 5,
+    navName: "Animal-Records",
+    to: "/animal-records",
+    navIcon: <FaClipboardList size={20} />,
   },
 ];
 const NavSection = () => {

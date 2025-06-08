@@ -290,7 +290,7 @@ const AnimalRecords = () => {
                 placeholder="Search"
                 className="global-search"
               />
-              <button className="add-btn">+ Add Mating</button>
+              <button className="add-btn">+ Add Animal</button>
             </div>
           </div>
 
@@ -300,13 +300,10 @@ const AnimalRecords = () => {
                 {[
                   "Mating ID",
                   "Species",
-                  "Chip ID - Male",
-                  "Chip ID - Female",
-                  "Entry",
-                  "Exit",
-                  "BD",
-                  "LD",
-                  "W",
+                  // "Animal chip",
+                  "Sex",
+                  "Birth Date",
+                  "Status",
                   "Mating ID",
                   "Actions",
                 ].map((header, idx) => (
@@ -315,15 +312,12 @@ const AnimalRecords = () => {
               </tr>
               <tr>
                 {[
-                  "matingID",
-                  "species",
-                  "maleChipID",
-                  "femaleChipID",
-                  "entryDate",
-                  "exitDate",
-                  "BD",
-                  "LD",
-                  "W",
+                  "Mating ID",
+                  "Species",
+                  // "Animal chip",
+                  "Sex",
+                  "Birth Date",
+                  "Status",
                   "Mating ID",
                 ].map((key, idx) => (
                   <th key={idx}>
@@ -352,22 +346,19 @@ const AnimalRecords = () => {
                       {item.animalID}
                     </Link>
                   </td>
-                  <td className="table-row-mating-records">{item.species}</td>
                   <td className="table-row-mating-records">
-                    <a href="#">{item.fatherclip}</a>
+                    {item.species === 10 ? "Dog" : "Cat"}
+                  </td>
+                  {/* <td className="table-row-mating-records">
+                    <a href="#">{item.chip}</a>
+                  </td> */}
+                  <td className="table-row-mating-records">
+                    <a href="#">{item.sex}</a>
                   </td>
                   <td className="table-row-mating-records">
-                    <a href="#">{item.motherclip}</a>
+                    {formatDate(item.birthDate)}
                   </td>
-                  <td className="table-row-mating-records">
-                    {formatDate(item.isCreated)}
-                  </td>
-                  <td className="table-row-mating-records">
-                    {formatDate(item.isUpdated)}
-                  </td>
-                  <td className="table-row-mating-records">{item.BD}</td>
-                  <td className="table-row-mating-records">{item.LD}</td>
-                  <td className="table-row-mating-records">{item.W}</td>
+                  <td className="table-row-mating-records">{item.status}</td>
                   <td className="table-row-mating-records">
                     <a href="#">{item.matingID}</a>
                   </td>

@@ -33,6 +33,8 @@ export const updateMatingRecords = createAsyncThunk(
   }
 );
 
+
+
 // --- DELETE ---
 export const deleteMatingRecords = createAsyncThunk(
   "mattings/deleteMatingRecords",
@@ -79,6 +81,7 @@ const MattingsSlice = createSlice({
           state.mattings[index] = action.payload;
         }
       })
+
 
       // DELETE
       .addCase(deleteMatingRecords.fulfilled, (state, action) => {

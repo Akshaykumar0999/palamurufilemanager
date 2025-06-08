@@ -225,6 +225,7 @@ const MatingRecords = () => {
   const dispatch = useDispatch();
 
   const mattings = useSelector((state) => state.mattings.mattings);
+  console.log(mattings)
 
   useEffect(() => {
     dispatch(fetchmattings());
@@ -289,7 +290,9 @@ const MatingRecords = () => {
                 placeholder="Search"
                 className="global-search"
               />
-              <button className="add-btn">+ Add Mating</button>
+              <button className="add-btn">
+                <Link to="/create-mating" style={{color: "#ffffff"}}>+ Add Mating</Link>
+              </button>
             </div>
           </div>
 
@@ -349,7 +352,9 @@ const MatingRecords = () => {
                       {item.matingID}
                     </Link>
                   </td>
-                  <td className="table-row-mating-records">{item.species === 10 ? "Dog" : "Cat" }</td>
+                  <td className="table-row-mating-records">
+                    {item.species === 10 ? "Dog" : "Cat"}
+                  </td>
                   <td className="table-row-mating-records">
                     <a href="#">{item.maleChipID}</a>
                   </td>

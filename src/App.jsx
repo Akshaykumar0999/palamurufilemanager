@@ -6,6 +6,8 @@ import CreateMating from "./components/CreatMating";
 import MatingRecords from "./components/MatingRecords";
 import AnimalRecords from "./components/AnimalRecords";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
   return (
     <div className="paint-inventory-main-container">

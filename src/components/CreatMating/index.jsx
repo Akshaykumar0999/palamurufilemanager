@@ -16,9 +16,10 @@ import {
 import { fetchAnimalChips } from "../../features/animalsChipSlice";
 import { fetchAnimals, createAnimalsRecords } from "../../features/animalSlice";
 import { FaRegEdit, FaDatabase } from "react-icons/fa";
+import AnimalReordsByMatingIdAndFilters from "../ModelRecords";
 
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+// import Button from "react-bootstrap/Button";
+// import Modal from "react-bootstrap/Modal";
 
 const CreateMating = () => {
   const contextData = useContext(NavMenuContext);
@@ -32,6 +33,33 @@ const CreateMating = () => {
   const [confirmationDateOne, setConfirmationDateOne] = useState(false);
   const [confirmationDateTwo, setConfirmationDateTwo] = useState(false);
   const [confirmationDateThree, setConfirmationDateThree] = useState(false);
+
+  
+  const [animalListByMate, setAnimalListByMate] = useState([]);
+  const [animalFilterValues, setAnimalFilterValues] = useState("");
+
+  function filterModelsRecords() {
+    switch (animalFilterValues) {
+      case ("Male"):
+        <AnimalReordsByMatingIdAndFilters
+          animalListByMate={animalListByMate}
+        />;
+        break;
+
+      case ("Female"):
+        console.log("a is greater than 5 and b is less than 10");
+        break;
+
+      case ("Total"):
+        console.log("x is yes or y is no");
+        break;
+
+      default:
+        console.log("No match");
+    }
+    
+  }
+  filterModelsRecords()
 
   const species = categoryTypes.filter((type) => type.categoryId === 4);
   const categorory = categoryTypes.filter((type) => type.categoryId === 1);
@@ -76,7 +104,7 @@ const CreateMating = () => {
     motherclip: "",
     fatherclip: "",
     weight: "",
-    sex: "",
+    sex: "Male",
     birthDate: null,
     label: "",
     location: "",
@@ -169,6 +197,23 @@ const CreateMating = () => {
     alert("All Three Dates are Confirmed...");
   };
 
+  //Animals filter by matingID
+  useEffect(() => {
+    const fetchSexOptions = async () => {
+      try {
+        const response = await fetch(
+          `https://filemanagerapi.onrender.com/mating/animal-by-mating/${contextData.activeMateID}`
+        );
+        const data = await response.json();
+        setAnimalListByMate(data); // assuming API returns an array like ["Male", "Female"]
+        // console.log(data);
+      } catch (error) {
+        console.error("Failed to fetch sex options:", error);
+      }
+    };
+
+    fetchSexOptions();
+  }, []);
   //handle filter animals by female tatoos
   // const handleFilteredAnimalsByFamleTatoos = animals.filter(
   //   (animal) => parseInt(animal.tatoo) === parseInt(matingData.femaleTatoo)
@@ -184,6 +229,10 @@ const CreateMating = () => {
     each.chip.toString().endsWith(matingData.femaleTatoo)
   );
 
+  const filterMaleAnimalID = filteredAnimalFemaleChips.filter((e) => String(e.chip) === String(matingData.femaleChipID));
+  // console.log(filteredAnimalFemaleChips);
+  // console.log(filterMaleAnimalID);
+
   const filteredAnimalMaleChips = animalChips.filter(
     (animal) => animal.FemaleT.toString() === matingData.femaleChipID.toString()
   );
@@ -196,7 +245,7 @@ const CreateMating = () => {
   });
 
   const filtermaleAnilmalsList = animals.filter(
-    (animal) => animal.fatherclip === matingData.maleChipID.toString()
+    (animal) => String(animal.chip) === String(matingData.maleChipID)
   );
 
   //handle filter animals by male tatoos
@@ -523,6 +572,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "blue" }}
+                    onClick={() => setAnimalFilterValues("Male")}
                   >
                     Male
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -532,6 +582,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "green" }}
+                    onClick={() => setAnimalFilterValues("Female")}
                   >
                     Female
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -541,6 +592,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "red" }}
+                    onClick={() => setAnimalFilterValues("BD")}
                   >
                     BD
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -550,6 +602,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "#ffd900" }}
+                    onClick={() => setAnimalFilterValues("LD")}
                   >
                     LD
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -559,6 +612,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "orange" }}
+                    onClick={() => setAnimalFilterValues("W")}
                   >
                     W
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -568,6 +622,7 @@ const CreateMating = () => {
                   <button
                     className="form-features-button"
                     style={{ background: "#ee00ff" }}
+                    onClick={() => setAnimalFilterValues("Total")}
                   >
                     Total
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
@@ -757,7 +812,7 @@ const CreateMating = () => {
                         style={{ paddingLeft: "5px" }}
                         value={
                           (matingData.femaleChipID !== "" &&
-                            filteredAnimalFemaleChips[0]?.animalID) ||
+                            filterMaleAnimalID[0]?.animalID) ||
                           ""
                         } // controlled value
                       />
@@ -773,6 +828,7 @@ const CreateMating = () => {
                           background: "#dedbdb",
                           borderRadius: "3px",
                           padding: "2px",
+                          height: "22px",
                         }}
                       >
                         <p style={{ fontSize: "12px", fontWeight: "500" }}>
@@ -860,6 +916,7 @@ const CreateMating = () => {
                       background: "#dedbdb",
                       borderRadius: "3px",
                       padding: "2px",
+                      height: "22px",
                     }}
                   >
                     <p style={{ fontSize: "12px", fontWeight: "500" }}>
@@ -918,6 +975,7 @@ const CreateMating = () => {
                         background: "#dedbdb",
                         borderRadius: "3px",
                         padding: "2px",
+                        height: "22px",
                       }}
                     >
                       <p style={{ fontSize: "12px", fontWeight: "500" }}>
@@ -1111,17 +1169,19 @@ const CreateMating = () => {
                     // matingData.MatingconfirmedDate1 !== "" &&
                     //   matingData.MatingconfirmedDate2 !== "" &&
                     //   matingData.MatingconfirmedDate3 !== ""
-                    (matingData.MatingconfirmedDate1 !== "" && matingData.MatingconfirmedDate2 !== "" && matingData.MatingconfirmedDate3 !== "") && (
-                      <h3
-                        style={{
-                          color: "green",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        All Three Confirmation Dates are Done...
-                      </h3>
-                    )
+                    matingData.MatingconfirmedDate1 !== "" &&
+                      matingData.MatingconfirmedDate2 !== "" &&
+                      matingData.MatingconfirmedDate3 !== "" && (
+                        <h3
+                          style={{
+                            color: "green",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          All Three Confirmation Dates are Done...
+                        </h3>
+                      )
                   }
                 </div>
                 {!matingData.isHeatedDetectedANDNotMated && (
@@ -1132,6 +1192,7 @@ const CreateMating = () => {
                         background: "#dedbdb",
                         borderRadius: "3px",
                         padding: "2px",
+                        height: "22px",
                       }}
                     >
                       <p style={{ fontSize: "12px", fontWeight: "500" }}>
@@ -1172,6 +1233,7 @@ const CreateMating = () => {
                         background: "#dedbdb",
                         borderRadius: "3px",
                         padding: "2px",
+                        height: "22px",
                       }}
                     >
                       <p style={{ fontSize: "12px", fontWeight: "500" }}>

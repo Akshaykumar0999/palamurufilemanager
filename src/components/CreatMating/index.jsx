@@ -17,6 +17,10 @@ import { fetchAnimalChips } from "../../features/animalsChipSlice";
 import { fetchAnimals, createAnimalsRecords } from "../../features/animalSlice";
 import { FaRegEdit, FaDatabase } from "react-icons/fa";
 import AnimalReordsByMatingIdAndFilters from "../ModelRecords";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Table from "react-bootstrap/Table";
+import { MdDelete } from "react-icons/md";
 
 // import Button from "react-bootstrap/Button";
 // import Modal from "react-bootstrap/Modal";
@@ -34,32 +38,31 @@ const CreateMating = () => {
   const [confirmationDateTwo, setConfirmationDateTwo] = useState(false);
   const [confirmationDateThree, setConfirmationDateThree] = useState(false);
 
-  
   const [animalListByMate, setAnimalListByMate] = useState([]);
   const [animalFilterValues, setAnimalFilterValues] = useState("");
 
-  function filterModelsRecords() {
-    switch (animalFilterValues) {
-      case ("Male"):
-        <AnimalReordsByMatingIdAndFilters
-          animalListByMate={animalListByMate}
-        />;
-        break;
+  // function filterModelsRecords() {
+  //   switch (animalFilterValues) {
+  //     case ("Male"):
+  //       <AnimalReordsByMatingIdAndFilters
+  //         animalListByMate={animalListByMate}
+  //       />;
+  //       break;
 
-      case ("Female"):
-        console.log("a is greater than 5 and b is less than 10");
-        break;
+  //     case ("Female"):
+  //       console.log("a is greater than 5 and b is less than 10");
+  //       break;
 
-      case ("Total"):
-        console.log("x is yes or y is no");
-        break;
+  //     case ("Total"):
+  //       console.log("x is yes or y is no");
+  //       break;
 
-      default:
-        console.log("No match");
-    }
-    
-  }
-  filterModelsRecords()
+  //     default:
+  //       console.log("No match");
+  //   }
+
+  // }
+  // filterModelsRecords()
 
   const species = categoryTypes.filter((type) => type.categoryId === 4);
   const categorory = categoryTypes.filter((type) => type.categoryId === 1);
@@ -104,7 +107,7 @@ const CreateMating = () => {
     motherclip: "",
     fatherclip: "",
     weight: "",
-    sex: "Male",
+    sex: "",
     birthDate: null,
     label: "",
     location: "",
@@ -205,15 +208,15 @@ const CreateMating = () => {
           `https://filemanagerapi.onrender.com/mating/animal-by-mating/${contextData.activeMateID}`
         );
         const data = await response.json();
-        setAnimalListByMate(data); // assuming API returns an array like ["Male", "Female"]
-        // console.log(data);
+        // ✅ Use `data.data` if the array is nested inside a `data` field
+        setAnimalListByMate(Array.isArray(data) ? data : data.data || []);
       } catch (error) {
-        console.error("Failed to fetch sex options:", error);
+        console.error("Failed to fetch animal list:", error);
       }
     };
 
     fetchSexOptions();
-  }, []);
+  }, [contextData.activeMateID]);
   //handle filter animals by female tatoos
   // const handleFilteredAnimalsByFamleTatoos = animals.filter(
   //   (animal) => parseInt(animal.tatoo) === parseInt(matingData.femaleTatoo)
@@ -229,7 +232,9 @@ const CreateMating = () => {
     each.chip.toString().endsWith(matingData.femaleTatoo)
   );
 
-  const filterMaleAnimalID = filteredAnimalFemaleChips.filter((e) => String(e.chip) === String(matingData.femaleChipID));
+  const filterMaleAnimalID = filteredAnimalFemaleChips.filter(
+    (e) => String(e.chip) === String(matingData.femaleChipID)
+  );
   // console.log(filteredAnimalFemaleChips);
   // console.log(filterMaleAnimalID);
 
@@ -445,6 +450,7 @@ const CreateMating = () => {
       parseInt(eachChip.FemaleT) === parseInt(matingData.femaleChipID)
   );
 
+  const [statusIs, setStatusIs] = useState(false);
   // Function to handle the form submission for adding animal data
   const handleAddAnimalData = async (e) => {
     e.preventDefault();
@@ -458,17 +464,16 @@ const CreateMating = () => {
       matingID: String(matingData.matingID),
       weight: 2 || "",
       userId: 1,
-      chip: String(matingData.maleChipID),
+      chip: 0,
       status: animalsData.status,
       birthDate: animalsData.birthDate,
       location: 13,
     };
-    // console.log("Adding Animal Data:", newAnimalData);
     try {
       await dispatch(createAnimalsRecords(newAnimalData)).unwrap(); // ✅ unwrap to catch errors
       alert("Animal data created successfully");
       setAnimalsData({
-        species: "",
+        species: 10,
         category: "",
         chip: "",
         tatoo: "",
@@ -548,6 +553,430 @@ const CreateMating = () => {
   const [textOfConfirmationDates, setTextOfConfirmationDates] = useState(false);
   const [showConfirmButton, setShowConfirmbutton] = useState(true);
 
+  //status cards model popups stats
+  const [totalAnimalRecords, setTotalAnimalRecords] = useState(false);
+  const [femaleAnimalRecords, setFemaleAnimalRecords] = useState(false);
+  const [maleAnimalRecords, setMaleAnimalRecords] = useState(false);
+  const [BDAnimalRecords, setBDAnimalRecords] = useState(false);
+  const [LDStatusAnimalRecords, setLDStatusAnimalRecords] = useState(false);
+  const [WStatusAnimalRecords, setWStatusAnimalRecords] = useState(false);
+
+  //total animals cards records
+  const TotalAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={totalAnimalRecords}
+        onHide={() => setTotalAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                All Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {animalListByMate.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(animalListByMate) &&
+              animalListByMate.length > 0 ? (
+                animalListByMate.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setTotalAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  //Famale animals cards records
+  const FemaleAnimalsRecords = animalListByMate.filter(
+    (female) => female.sex === "Female"
+  );
+  const FemaleAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={femaleAnimalRecords}
+        onHide={() => setFemaleAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                Female Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {FemaleAnimalsRecords.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(FemaleAnimalsRecords) &&
+              FemaleAnimalsRecords.length > 0 ? (
+                FemaleAnimalsRecords.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setFemaleAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  //male animals cards records
+  const MaleAnimalsRecords = animalListByMate.filter(
+    (female) => female.sex === "Male"
+  );
+  const MaleAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={maleAnimalRecords}
+        onHide={() => setMaleAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                Male Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {MaleAnimalsRecords.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(MaleAnimalsRecords) &&
+              MaleAnimalsRecords.length > 0 ? (
+                MaleAnimalsRecords.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setMaleAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  //BD animals cards records
+  const BDAnimalsRecords = animalListByMate.filter(
+    (each) => each.status === "BD"
+  );
+  const BDAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={BDAnimalRecords}
+        onHide={() => setBDAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                Status With BD Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {BDAnimalsRecords.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(BDAnimalsRecords) &&
+              BDAnimalsRecords.length > 0 ? (
+                BDAnimalsRecords.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setBDAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  //LD animals cards records
+  const LDAnimalsRecords = animalListByMate.filter(
+    (each) => each.status === "LD"
+  );
+  const LDAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={LDStatusAnimalRecords}
+        onHide={() => setLDStatusAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                Status With LD Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {LDAnimalsRecords.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(LDAnimalsRecords) &&
+              LDAnimalsRecords.length > 0 ? (
+                LDAnimalsRecords.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setLDStatusAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  //LD animals cards records
+  const WAnimalsRecords = animalListByMate.filter(
+    (each) => each.status === "W"
+  );
+  const WAnimalsRecordsModel = () => {
+    return (
+      <Modal
+        show={WStatusAnimalRecords}
+        onHide={() => setWStatusAnimalRecords(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary" style={{ fontSize: "20px" }}>
+                Status With W Animals
+              </h3>
+              <Button
+                className="bg-warning"
+                style={{ fontSize: "15px", border: "none", marginLeft: "15px" }}
+              >
+                Records : {WAnimalsRecords.length}
+              </Button>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th className="text-white bg-primary">Animal-ID</th>
+                <th className="text-white bg-primary">Sex</th>
+                <th className="text-white bg-primary">Birth-Date</th>
+                <th className="text-white bg-primary">Status</th>
+                <th className="text-white bg-primary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(WAnimalsRecords) && WAnimalsRecords.length > 0 ? (
+                WAnimalsRecords.map((each, i) => (
+                  <tr key={i}>
+                    <td>{each.animalID}</td>
+                    <td>{each.sex}</td>
+                    <td>{each.birthDate?.slice(0, 10) || "N/A"}</td>
+                    <td>{each.status || "N/A"}</td>
+                    <td>
+                      <MdDelete size={20} style={{ color: "red" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Records Found On this MateID
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setWStatusAnimalRecords(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   return (
     <div className="main-container-card">
       <NavSection />
@@ -566,90 +995,93 @@ const CreateMating = () => {
                 </span>
               )}
             </h1>
-            {contextData.openEdit && (
-              <div className="status-cards-container">
-                <div className="form-buttos-container-card">
+            <div className="form-cards-add-container">
+              {contextData.openEdit && (
+                <div className="status-cards-container">
+                  <div className="form-buttos-container-card">
+                    <button
+                      className="form-features-button"
+                      style={{ background: "blue" }}
+                      onClick={() => setMaleAnimalRecords(true)}
+                    >
+                      Male
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {MaleAnimalsRecords.length}
+                      </span>
+                    </button>
+                    <button
+                      className="form-features-button"
+                      style={{ background: "green" }}
+                      onClick={() => setFemaleAnimalRecords(true)}
+                    >
+                      Female
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {FemaleAnimalsRecords.length}
+                      </span>
+                    </button>
+                    <button
+                      className="form-features-button"
+                      style={{ background: "red" }}
+                      onClick={() => setBDAnimalRecords(true)}
+                    >
+                      BD
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {BDAnimalsRecords.length}
+                      </span>
+                    </button>
+                    <button
+                      className="form-features-button"
+                      style={{ background: "#ffd900" }}
+                      onClick={() => setLDStatusAnimalRecords("LD")}
+                    >
+                      LD
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {LDAnimalsRecords.length}
+                      </span>
+                    </button>
+                    <button
+                      className="form-features-button"
+                      style={{ background: "orange" }}
+                      onClick={() => setWStatusAnimalRecords(true)}
+                    >
+                      W
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {WAnimalsRecords.length}
+                      </span>
+                    </button>
+                    <button
+                      className="form-features-button"
+                      style={{ background: "#ee00ff" }}
+                      // onClick={() => setAnimalFilterValues("Total")}
+                      onClick={() => setTotalAnimalRecords(true)}
+                    >
+                      Total
+                      <span style={{ fontSize: "20px", lineHeight: "15px" }}>
+                        {animalListByMate.length}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              )}
+              {contextData.openEdit ? (
+                <div className="form-edit-buttons">
                   <button
-                    className="form-features-button"
-                    style={{ background: "blue" }}
-                    onClick={() => setAnimalFilterValues("Male")}
+                    className="form-mating-Edit-btn"
+                    onClick={UpdateMatingData}
                   >
-                    Male
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
-                  </button>
-                  <button
-                    className="form-features-button"
-                    style={{ background: "green" }}
-                    onClick={() => setAnimalFilterValues("Female")}
-                  >
-                    Female
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
-                  </button>
-                  <button
-                    className="form-features-button"
-                    style={{ background: "red" }}
-                    onClick={() => setAnimalFilterValues("BD")}
-                  >
-                    BD
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
-                  </button>
-                  <button
-                    className="form-features-button"
-                    style={{ background: "#ffd900" }}
-                    onClick={() => setAnimalFilterValues("LD")}
-                  >
-                    LD
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
-                  </button>
-                  <button
-                    className="form-features-button"
-                    style={{ background: "orange" }}
-                    onClick={() => setAnimalFilterValues("W")}
-                  >
-                    W
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
-                  </button>
-                  <button
-                    className="form-features-button"
-                    style={{ background: "#ee00ff" }}
-                    onClick={() => setAnimalFilterValues("Total")}
-                  >
-                    Total
-                    <span style={{ fontSize: "20px", lineHeight: "15px" }}>
-                      0
-                    </span>
+                    <FaRegEdit size={15} style={{ marginRight: "2px" }} /> Edit
                   </button>
                 </div>
-              </div>
-            )}
-            {contextData.openEdit ? (
-              <div className="form-edit-buttons">
-                <button
-                  className="form-mating-Edit-btn"
-                  onClick={UpdateMatingData}
+              ) : (
+                matingData.femaleChipID ? <button
+                  className="form-mating-btn"
+                  onClick={AddMatingFormDetails}
                 >
-                  <FaRegEdit size={15} style={{ marginRight: "2px" }} /> Edit
-                </button>
-              </div>
-            ) : (
-              <button
-                className="form-mating-btn"
-                onClick={AddMatingFormDetails}
-              >
-                <FaDatabase size={15} style={{ marginRight: "2px" }} />
-                Save
-              </button>
-            )}
+                  <FaDatabase size={15} style={{ marginRight: "2px" }} />
+                  Save
+                </button> : ""
+              )}
+            </div>
           </div>
           <form className="mating-form-main-container">
             <div className="forms-sections-card">
@@ -776,8 +1208,8 @@ const CreateMating = () => {
                         value={matingData.femaleChipID}
                       >
                         <option>Select Female Chip ID</option>
-                        {filterFemaleChips.map((chip) => (
-                          <option key={chip.tatoo} value={chip.chip}>
+                        {filterFemaleChips.map((chip, i) => (
+                          <option key={i} value={chip.chip}>
                             {chip.chip}
                           </option>
                         ))}
@@ -858,6 +1290,7 @@ const CreateMating = () => {
                             name="pregencyMethod"
                             value={matingData.pregencyMethod || ""}
                           >
+                            <option>Select Method</option>
                             <option value="External view">External view</option>
                             <option value="Abdominal palpation">
                               Abdominal palpation
@@ -1270,6 +1703,7 @@ const CreateMating = () => {
                           }
                           value={animalsData.sex || ""} // controlled value
                         >
+                          <option>Select Gender</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
                         </select>
@@ -1278,7 +1712,9 @@ const CreateMating = () => {
 
                     <div className="section-one-input-card">
                       <div className="input-containers">
-                        <label className="input-label">Status</label>
+                        <label className="input-label">
+                          Status {animalsData.status === "" && <span style={{color: 'red', fontSize: '15px'}}>*</span>}
+                        </label>
                         <div
                           className="input-containers"
                           style={{
@@ -1356,6 +1792,13 @@ const CreateMating = () => {
                             </label>
                           </div>
                         </div>
+                        {/* {animalsData.status === "" ? (
+                          <p style={{ fontSize: "11px", color: "red" }}>
+                            Please Select one of this state
+                          </p>
+                        ) : (
+                          ""
+                        )} */}
                       </div>
                       <div className="input-containers">
                         <button
@@ -1448,8 +1891,12 @@ const CreateMating = () => {
               </button>
             )} */}
           </form>
-
-          {/* {confirmationDateOneModel()} */}
+          {TotalAnimalsRecordsModel()}
+          {FemaleAnimalsRecordsModel()}
+          {MaleAnimalsRecordsModel()}
+          {BDAnimalsRecordsModel()}
+          {LDAnimalsRecordsModel()}
+          {WAnimalsRecordsModel()}
         </main>
       </div>
     </div>

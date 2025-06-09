@@ -1072,14 +1072,16 @@ const CreateMating = () => {
                     <FaRegEdit size={15} style={{ marginRight: "2px" }} /> Edit
                   </button>
                 </div>
-              ) : (
-                matingData.femaleChipID ? <button
+              ) : matingData.femaleChipID ? (
+                <button
                   className="form-mating-btn"
                   onClick={AddMatingFormDetails}
                 >
                   <FaDatabase size={15} style={{ marginRight: "2px" }} />
                   Save
-                </button> : ""
+                </button>
+              ) : (
+                ""
               )}
             </div>
           </div>
@@ -1321,7 +1323,7 @@ const CreateMating = () => {
                         {matingData.confirmedPergency && (
                           <div className="input-containers">
                             <label className="input-label">
-                              confirm Pregency Date
+                              PregnancyPreventativeTreatmentDate
                             </label>
                             <input
                               type="Date"
@@ -1713,7 +1715,12 @@ const CreateMating = () => {
                     <div className="section-one-input-card">
                       <div className="input-containers">
                         <label className="input-label">
-                          Status {animalsData.status === "" && <span style={{color: 'red', fontSize: '15px'}}>*</span>}
+                          Status{" "}
+                          {animalsData.status === "" && (
+                            <span style={{ color: "red", fontSize: "15px" }}>
+                              *
+                            </span>
+                          )}
                         </label>
                         <div
                           className="input-containers"

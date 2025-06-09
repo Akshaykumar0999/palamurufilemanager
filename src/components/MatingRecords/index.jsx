@@ -225,7 +225,7 @@ const MatingRecords = () => {
   const dispatch = useDispatch();
 
   const mattings = useSelector((state) => state.mattings.mattings);
-  console.log(mattings)
+  // console.log(mattings)
 
   useEffect(() => {
     dispatch(fetchmattings());

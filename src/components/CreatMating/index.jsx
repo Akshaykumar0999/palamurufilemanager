@@ -134,6 +134,22 @@ const CreateMating = () => {
     alert("Do u want to ConfirmationDate-1");
   };
 
+  useEffect(() => {
+    if (!isNaN(Date.parse(matingData.MatingconfirmedDate1))) {
+      const date = new Date(matingData.MatingconfirmedDate1);
+      date.setDate(date.getDate() + 62);
+      const result = date.toISOString().split("T")[0];
+      setMatingData((prevData) => ({
+        ...prevData,
+        EsitmatedDate: result,
+      }));
+      setConfirmationDateTwo(true);
+      // setConfirmationDateOne(false);
+    } else {
+      console.error("❌ Invalid date format:", matingData.MatingconfirmedDate1);
+    }
+  }, [!isNaN(Date.parse(matingData.MatingconfirmedDate1))]);
+
   //confirm date two input event handler
   const handleConfirmDateTwoInput = (e) => {
     setMatingData((prev) => ({
@@ -142,6 +158,15 @@ const CreateMating = () => {
     }));
     setConfirmationDateOne(false);
     alert("Do u want to ConfirmationDate-2");
+  };
+
+  const handleConfirmDateThreeInput = (e) => {
+    setMatingData((prev) => ({
+      ...prev,
+      MatingconfirmedDate3: e.target.value,
+    }));
+    setConfirmationDateOne(false);
+    alert("All Three Dates are Confirmed...");
   };
 
   //handle filter animals by female tatoos
@@ -159,8 +184,6 @@ const CreateMating = () => {
     each.chip.toString().endsWith(matingData.femaleTatoo)
   );
 
-  // console.log(filterFemaleChips)
-
   const filteredAnimalMaleChips = animalChips.filter(
     (animal) => animal.FemaleT.toString() === matingData.femaleChipID.toString()
   );
@@ -173,7 +196,7 @@ const CreateMating = () => {
   });
 
   const filtermaleAnilmalsList = animals.filter(
-    (animal) => animal.chip.toString() === matingData.maleChipID.toString()
+    (animal) => animal.fatherclip === matingData.maleChipID.toString()
   );
 
   //handle filter animals by male tatoos
@@ -198,10 +221,36 @@ const CreateMating = () => {
         matingData.PregnancyPreventativeTreatmentDate,
       userId: 1,
     };
-    console.log("Adding Mating Data:", newMatingData);
+    // console.log("Adding Mating Data:", newMatingData);
     try {
       await dispatch(createMatingRecords(newMatingData)).unwrap();
       alert("Mating record added successfully");
+      setMatingData({
+        species: 10,
+        maleTatoo: "",
+        femaleTatoo: "",
+        maleChipID: "",
+        femaleChipID: "",
+        entryDate: "",
+        exitDate: "",
+        ACategroy: "",
+        BD: "",
+        LD: "",
+        W: "",
+        otherproblmenss: "",
+        isHeatedDetectedANDNotMated: 0,
+        MatingconfirmedDate1: "",
+        MatingconfirmedDate2: "",
+        MatingconfirmedDate3: "",
+        EsitmatedDate: "",
+        RealBirthDate: "",
+        countconfdatees: "",
+        userId: "",
+        pregencyMethod: "",
+        confirmedPergency: false,
+        pregencyConfirmedDate: "",
+        PregnancyPreventativeTreatmentDate: "",
+      });
     } catch (error) {
       alert("Failed to add mating record");
     }
@@ -306,38 +355,39 @@ const CreateMating = () => {
         matingData.PregnancyPreventativeTreatmentDate,
       matingID: contextData.activeMateID,
     };
-    console.log("Updated Mating Data:", newMatingData);
+    // console.log("Updated Mating Data:", newMatingData);
     try {
       await dispatch(updateMatingRecords(newMatingData)).unwrap();
       alert("Mating record Updated successfully");
+      setMatingData({
+        species: 10,
+        maleTatoo: "",
+        femaleTatoo: "",
+        maleChipID: "",
+        femaleChipID: "",
+        entryDate: "",
+        exitDate: "",
+        ACategroy: "",
+        BD: "",
+        LD: "",
+        W: "",
+        otherproblmenss: "",
+        isHeatedDetectedANDNotMated: 0,
+        MatingconfirmedDate1: "",
+        MatingconfirmedDate2: "",
+        MatingconfirmedDate3: "",
+        EsitmatedDate: "",
+        RealBirthDate: "",
+        countconfdatees: "",
+        userId: "",
+        pregencyMethod: "",
+        confirmedPergency: false,
+        pregencyConfirmedDate: "",
+        PregnancyPreventativeTreatmentDate: "",
+      });
     } catch (error) {
       alert("Failed to Update mating record");
     }
-    setMatingData({
-      species: species.length > 0 && species[0].id,
-      tatoo: "",
-      maleChipID: "",
-      femaleChipID: "",
-      entryDate: "",
-      exitDate: "",
-      BD: "",
-      LD: "",
-      W: "",
-      otherproblmenss: "",
-      isHeatedDetectedANDNotMated: 0,
-      EsitmatedDate: "",
-      RealBirthDate: "",
-      countconfdatees: "",
-      userId: "",
-      MatingconfirmedDate1: "",
-      MatingconfirmedDate2: "",
-      MatingconfirmedDate3: "",
-      pregencyMethod: "",
-      confirmedPergency: false,
-      pregencyConfirmedDate: "",
-      PregnancyPreventativeTreatmentDate: "",
-      ACategroy: "",
-    });
     contextData.setOpenEdit(false);
   };
 
@@ -364,7 +414,7 @@ const CreateMating = () => {
       birthDate: animalsData.birthDate,
       location: 13,
     };
-    console.log("Adding Animal Data:", newAnimalData);
+    // console.log("Adding Animal Data:", newAnimalData);
     try {
       await dispatch(createAnimalsRecords(newAnimalData)).unwrap(); // ✅ unwrap to catch errors
       alert("Animal data created successfully");
@@ -431,13 +481,13 @@ const CreateMating = () => {
   //   </Modal>;
   // }
 
-  useEffect(() => {
-    if (contextData.openEdit) {
-      if (matingData.MatingconfirmedDate1) setConfirmationDateOne(true);
-      if (matingData.MatingconfirmedDate2) setConfirmationDateTwo(true);
-      if (matingData.MatingconfirmedDate3) setConfirmationDateThree(true);
-    }
-  }, [contextData.openEdit]);
+  // useEffect(() => {
+  //   if (contextData.openEdit) {
+  //     if (matingData.MatingconfirmedDate1) setConfirmationDateOne(true);
+  //     if (matingData.MatingconfirmedDate2) setConfirmationDateTwo(true);
+  //     if (matingData.MatingconfirmedDate3) setConfirmationDateThree(true);
+  //   }
+  // }, [contextData.openEdit]);
 
   // useEffect(() => {
   //   if (contextData.openEdit) {
@@ -470,7 +520,7 @@ const CreateMating = () => {
             {contextData.openEdit && (
               <div className="status-cards-container">
                 <div className="form-buttos-container-card">
-                  <p
+                  <button
                     className="form-features-button"
                     style={{ background: "blue" }}
                   >
@@ -478,8 +528,8 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
-                  <p
+                  </button>
+                  <button
                     className="form-features-button"
                     style={{ background: "green" }}
                   >
@@ -487,8 +537,8 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
-                  <p
+                  </button>
+                  <button
                     className="form-features-button"
                     style={{ background: "red" }}
                   >
@@ -496,8 +546,8 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
-                  <p
+                  </button>
+                  <button
                     className="form-features-button"
                     style={{ background: "#ffd900" }}
                   >
@@ -505,8 +555,8 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
-                  <p
+                  </button>
+                  <button
                     className="form-features-button"
                     style={{ background: "orange" }}
                   >
@@ -514,8 +564,8 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
-                  <p
+                  </button>
+                  <button
                     className="form-features-button"
                     style={{ background: "#ee00ff" }}
                   >
@@ -523,7 +573,7 @@ const CreateMating = () => {
                     <span style={{ fontSize: "20px", lineHeight: "15px" }}>
                       0
                     </span>
-                  </p>
+                  </button>
                 </div>
               </div>
             )}
@@ -889,7 +939,7 @@ const CreateMating = () => {
                           value={matingData.MatingconfirmedDate1}
                         />
                       </div>
-                      {matingData.MatingconfirmedDate1 &&
+                      {/* {matingData.MatingconfirmedDate1 &&
                         !confirmationDateTwo && (
                           <button
                             className="form-is-registred-button"
@@ -921,7 +971,7 @@ const CreateMating = () => {
                           >
                             Add
                           </button>
-                        )}
+                        )} */}
                       {confirmationDateTwo ||
                       matingData.MatingconfirmedDate2 !== "" ||
                       matingData.MatingconfirmedDate3 !== "" ? (
@@ -942,24 +992,28 @@ const CreateMating = () => {
                   )}
                   {!matingData.isHeatedDetectedANDNotMated && (
                     <div className="section-one-input-card">
-                      {confirmationDateThree ||
-                      matingData.MatingconfirmedDate3 !== "" ? (
-                        <div className="input-containers">
-                          <label className="input-label">
-                            Mating Confirmed 3
-                          </label>
-                          <input
-                            type="date"
-                            className="input-select-card"
-                            onChange={handleInputChange}
-                            name="MatingconfirmedDate3"
-                            value={matingData.MatingconfirmedDate3}
-                          />
-                        </div>
-                      ) : null}
+                      {/* {confirmationDateThree ||
+                      matingData.MatingconfirmedDate3 !== "" ?
+                       ( */}
+                      {matingData.MatingconfirmedDate2 !== "" &&
+                        matingData.MatingconfirmedDate1 !== "" && (
+                          <div className="input-containers">
+                            <label className="input-label">
+                              Mating Confirmed 3
+                            </label>
+                            <input
+                              type="date"
+                              className="input-select-card"
+                              onChange={handleConfirmDateThreeInput}
+                              name="MatingconfirmedDate3"
+                              value={matingData.MatingconfirmedDate3}
+                            />
+                          </div>
+                        )}
+                      {/* ) : null} */}
 
                       <div className="input-containers">
-                        {
+                        {/* {
                           // confirmationDateTwo ||
                           // matingData.MatingconfirmedDate1 !== ""
                           matingData.MatingconfirmedDate2 &&
@@ -975,7 +1029,7 @@ const CreateMating = () => {
                               Add 2
                             </button>
                           ) : null
-                        }
+                        } */}
                         {/* {confirmationDateThree && (
                           <button
                             type="button"
@@ -1024,10 +1078,10 @@ const CreateMating = () => {
                               Confirm
                             </button>
                           )} */}
-                        {matingData.MatingconfirmedDate1 !== "" &&
+                        {/* {(matingData.MatingconfirmedDate1 !== "" &&
                         matingData.MatingconfirmedDate2 !== "" &&
-                        matingData.MatingconfirmedDate3 !== "" &&
-                        showConfirmButton ? (
+                        matingData.MatingconfirmedDate3 !== "" )
+                         ? (
                           <button
                             type="button"
                             className="form-is-registred-button"
@@ -1040,9 +1094,6 @@ const CreateMating = () => {
                                 alert("All 3 Dates Confirmed");
                                 setTextOfConfirmationDates(true);
                                 setShowConfirmbutton(false);
-                                setConfirmationDateOne(false);
-                                setConfirmationDateTwo(false);
-                                setConfirmationDateThree(false);
                               } else {
                                 alert(
                                   "Please fill all 3 dates before confirming."
@@ -1052,7 +1103,7 @@ const CreateMating = () => {
                           >
                             Confirm
                           </button>
-                        ) : null}
+                        ) : null} */}
                       </div>
                     </div>
                   )}
@@ -1060,7 +1111,7 @@ const CreateMating = () => {
                     // matingData.MatingconfirmedDate1 !== "" &&
                     //   matingData.MatingconfirmedDate2 !== "" &&
                     //   matingData.MatingconfirmedDate3 !== ""
-                    textOfConfirmationDates && (
+                    (matingData.MatingconfirmedDate1 !== "" && matingData.MatingconfirmedDate2 !== "" && matingData.MatingconfirmedDate3 !== "") && (
                       <h3
                         style={{
                           color: "green",

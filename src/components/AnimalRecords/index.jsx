@@ -298,7 +298,7 @@ const AnimalRecords = () => {
             <thead>
               <tr>
                 {[
-                  "Mating ID",
+                  "Animal ID",
                   "Species",
                   // "Animal chip",
                   "Sex",
